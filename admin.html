@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <style>
+    body { background:#111; color:#fff; font-family:Arial; padding:20px; }
+    h2 { margin-top:20px; }
+    input, button, textarea { margin:5px 0; padding:8px; width:100%; }
+    button { cursor:pointer; }
+    .box { background:#222; padding:15px; margin-bottom:20px; border-radius:5px; }
+  </style>
+</head>
+<body>
+  <h1>Admin Panel Upload Ads</h1>
+
+  <div class="box">
+    <h2>Upload Video Embed (Pagination)</h2>
+    <textarea id="videos" placeholder="Masukkan link embed video, pisahkan dengan enter"></textarea>
+  </div>
+
+  <div class="box">
+    <h2>Upload Banner Ads (50)</h2>
+    <textarea id="banners" placeholder="Masukkan link banner, pisahkan dengan enter"></textarea>
+  </div>
+
+  <div class="box">
+    <h2>Upload Popunder Ads (10)</h2>
+    <textarea id="popunders" placeholder="Masukkan link popunder, pisahkan dengan enter"></textarea>
+  </div>
+
+  <div class="box">
+    <h2>Upload Slide Video Ads</h2>
+    <input type="text" id="slide" placeholder="Masukkan URL video iklan slide (mp4)">
+  </div>
+
+  <div class="box">
+    <h2>Upload Preroll / Midroll Ads</h2>
+    <input type="text" id="preroll" placeholder="Link Preroll Video Ad">
+    <input type="text" id="midroll" placeholder="Link Midroll Video Ad">
+  </div>
+
+  <button onclick="saveData()">Simpan</button>
+
+  <script>
+    function saveData() {
+      const data = {
+        videos: document.getElementById("videos").value.split("\n").filter(v=>v.trim()!==""),
+        banners: document.getElementById("banners").value.split("\n").filter(v=>v.trim()!==""),
+        popunders: document.getElementById("popunders").value.split("\n").filter(v=>v.trim()!==""),
+        slide: document.getElementById("slide").value.trim(),
+        preroll: document.getElementById("preroll").value.trim(),
+        midroll: document.getElementById("midroll").value.trim(),
+      };
+      localStorage.setItem("adsData", JSON.stringify(data));
+      alert("Data berhasil disimpan! Silakan buka index.html");
+    }
+  </script>
+</body>
+</html>

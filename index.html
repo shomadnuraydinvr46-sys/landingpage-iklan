@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Landing Page Video</title>
+  <style>
+    body { margin:0; background:#111; color:#fff; font-family:Arial; text-align:center; }
+    .video-container { width:80%; margin:20px auto; }
+    iframe { width:100%; height:480px; border:none; }
+    .pagination { margin:20px; }
+    .pagination button { background:#333; color:#fff; border:none; padding:10px 15px; margin:3px; cursor:pointer; }
+    footer { display:grid; grid-template-columns:repeat(10,1fr); gap:5px; padding:10px; background:#000; }
+    .banner { background:#444; height:80px; display:flex; align-items:center; justify-content:center; font-size:12px; }
+    .slide-ad { position:fixed; bottom:20px; right:20px; width:300px; height:200px; background:#222; border:2px solid #ff0; display:none; z-index:9999; }
+  </style>
+</head>
+<body>
+  <h1>Landing Page Video Player</h1>
+
+  <div class="video-container">
+    <iframe id="videoPlayer" src="" allowfullscreen></iframe>
+  </div>
+
+  <div class="pagination" id="pagination"></div>
+
+  <footer id="bannerFooter"></footer>
+
+  <div class="slide-ad" id="slideAd">
+    <video width="100%" height="100%" autoplay muted loop>
+      <source id="slideVideo" src="" type="video/mp4">
+    </video>
+  </div>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem("adsData")) || {
+      videos: [],
+      banners: [],
+      popunders: [],
+      slide: "",
+      preroll: "",
+      midroll: ""
+    };
+
+    const videoPlayer = document.getElementById("videoPlayer");
+
+    // === VIDEO PAGINATION ===
+    function loadVideo(index) {
+      if (data.videos[index]) {
+        videoPlayer.src = data.videos[index];
+      }
+    }
+    const pagination = document.getElementById("pagination");
+    data.videos.forEach((_, i) => {
+      const btn = document.createElement("button");
+      btn.innerText = i + 1;
+      btn.onclick = () => loadVideo(i);
+      pagination.appendChild(btn);
+    });
+    if (data.videos[0]) loadVideo(0);
+
+    // === BANNER 50 tampil bersamaan + restart setiap 10 detik ===
+    const bannerFooter = document.getElementById("bannerFooter");
+    function loadBanners() {
+      bannerFooter.innerHTML = "";
+      data.banners.forEach((b, i) => {
+        const el = document.createElement("div");
+        el.className = "banner";
+        el.innerHTML = `<a href="${b}" target="_blank">Banner ${i+1}</a>`;
+        bannerFooter.appendChild(el);
+      });
+    }
+    if (data.banners.length > 0) {
+      loadBanners();
+      setInterval(loadBanners, 10000); // restart tiap 10 detik
+    }
+
+    // === POPUNDER 10 ===
+    window.addEventListener("click", () => {
+      data.popunders.forEach(url => {
+        let w = window.open(url, "_blank");
+        if (w) w.blur();
+      });
+      window.focus();
+    }, { once:true });
+
+    // === SLIDE VIDEO AD ===
+    if (data.slide) {
+      document.getElementById("slideVideo").src = data.slide;
+      setTimeout(() => {
+        document.getElementById("slideAd").style.display = "block";
+      }, 5000);
+    }
+
+    // === PREROLL & MIDROLL ===
+    videoPlayer.addEventListener("load", () => {
+      if (data.preroll) alert("Preroll: " + data.preroll);
+      if (data.midroll) {
+        setTimeout(() => {
+          alert("Midroll: " + data.midroll);
+        }, 15000);
+      }
+    });
+  </script>
+
+<script>
+  const dummyData = {
+    videos: ['https://www.youtube.com/embed/dQw4w9WgXcQ?start=0', 'https://www.youtube.com/embed/dQw4w9WgXcQ?start=10', 'https://www.youtube.com/embed/dQw4w9WgXcQ?start=20', 'https://www.youtube.com/embed/dQw4w9WgXcQ?start=30', 'https://www.youtube.com/embed/dQw4w9WgXcQ?start=40'],
+    banners: ['https://example.com/banner1', 'https://example.com/banner2', 'https://example.com/banner3', 'https://example.com/banner4', 'https://example.com/banner5', 'https://example.com/banner6', 'https://example.com/banner7', 'https://example.com/banner8', 'https://example.com/banner9', 'https://example.com/banner10', 'https://example.com/banner11', 'https://example.com/banner12', 'https://example.com/banner13', 'https://example.com/banner14', 'https://example.com/banner15', 'https://example.com/banner16', 'https://example.com/banner17', 'https://example.com/banner18', 'https://example.com/banner19', 'https://example.com/banner20', 'https://example.com/banner21', 'https://example.com/banner22', 'https://example.com/banner23', 'https://example.com/banner24', 'https://example.com/banner25', 'https://example.com/banner26', 'https://example.com/banner27', 'https://example.com/banner28', 'https://example.com/banner29', 'https://example.com/banner30', 'https://example.com/banner31', 'https://example.com/banner32', 'https://example.com/banner33', 'https://example.com/banner34', 'https://example.com/banner35', 'https://example.com/banner36', 'https://example.com/banner37', 'https://example.com/banner38', 'https://example.com/banner39', 'https://example.com/banner40', 'https://example.com/banner41', 'https://example.com/banner42', 'https://example.com/banner43', 'https://example.com/banner44', 'https://example.com/banner45', 'https://example.com/banner46', 'https://example.com/banner47', 'https://example.com/banner48', 'https://example.com/banner49', 'https://example.com/banner50'],
+    popunders: ['https://example.com/pop1', 'https://example.com/pop2', 'https://example.com/pop3', 'https://example.com/pop4', 'https://example.com/pop5', 'https://example.com/pop6', 'https://example.com/pop7', 'https://example.com/pop8', 'https://example.com/pop9', 'https://example.com/pop10'],
+    slide: "https://www.w3schools.com/html/mov_bbb.mp4",
+    preroll: "https://example.com/preroll",
+    midroll: "https://example.com/midroll"
+  };
+  localStorage.setItem("adsData", JSON.stringify(dummyData));
+</script>
+
+</body>
+</html>
